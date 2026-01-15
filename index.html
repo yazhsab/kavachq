@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KavachQ — Quantum-Grade Security</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-0: #0b0d12;
+        --bg-1: #111824;
+        --bg-2: #111e2b;
+        --ink: #f1f4fb;
+        --muted: #93a1b8;
+        --accent-1: #6fd0ff;
+        --accent-2: #9bb6ff;
+        --accent-3: #7a9cff;
+        --accent-4: #8bd2b2;
+        --glass: rgba(12, 18, 28, 0.75);
+        --stroke: rgba(255, 255, 255, 0.12);
+        --shadow: rgba(0, 0, 0, 0.45);
+        --glow: 0 0 30px rgba(111, 208, 255, 0.15);
+        --grid: rgba(255, 255, 255, 0.025);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        background: radial-gradient(1200px 600px at 10% -10%, rgba(111, 208, 255, 0.2), transparent 60%),
+          radial-gradient(900px 600px at 85% 0%, rgba(155, 182, 255, 0.18), transparent 65%),
+          radial-gradient(1000px 700px at 60% 110%, rgba(139, 210, 178, 0.18), transparent 60%),
+          linear-gradient(180deg, var(--bg-0), var(--bg-2));
+        overflow-x: hidden;
+      }
+
+      .orb {
+        position: fixed;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        filter: blur(0.2px);
+        opacity: 0.35;
+        z-index: 0;
+        mix-blend-mode: screen;
+        background: radial-gradient(circle at 30% 30%, var(--accent-1), transparent 60%),
+          radial-gradient(circle at 70% 65%, var(--accent-3), transparent 70%);
+        animation: float 14s ease-in-out infinite;
+      }
+
+      .orb.orb-right {
+        right: -120px;
+        top: 80px;
+        animation-delay: 1.2s;
+      }
+
+      .orb.orb-left {
+        left: -140px;
+        bottom: -60px;
+        background: radial-gradient(circle at 30% 30%, var(--accent-4), transparent 60%),
+          radial-gradient(circle at 70% 65%, var(--accent-2), transparent 70%);
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) translateX(0px);
+        }
+        50% {
+          transform: translateY(-40px) translateX(20px);
+        }
+      }
+
+      .grid-floor {
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 48px 48px;
+        transform: perspective(900px) rotateX(60deg) translateY(240px);
+        transform-origin: bottom;
+        opacity: 0.12;
+        z-index: 0;
+        pointer-events: none;
+        animation: gridPulse 10s ease-in-out infinite;
+      }
+
+      @keyframes gridPulse {
+        0%,
+        100% {
+          opacity: 0.18;
+        }
+        50% {
+          opacity: 0.32;
+        }
+      }
+
+      header {
+        position: relative;
+        z-index: 2;
+        padding: 32px clamp(20px, 6vw, 96px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Unbounded", sans-serif;
+        font-size: 22px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .logo svg {
+        width: 44px;
+        height: 44px;
+      }
+
+      .logo-mark {
+        fill: none;
+        stroke: url(#kq-gradient);
+        stroke-width: 3.5;
+      }
+
+      nav {
+        display: flex;
+        gap: 18px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      nav a:hover {
+        color: var(--accent-1);
+      }
+
+      .hero {
+        position: relative;
+        z-index: 1;
+        padding: 40px clamp(20px, 6vw, 110px) 80px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        gap: clamp(30px, 6vw, 80px);
+        align-items: center;
+      }
+
+      .hero-copy h1 {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(40px, 6vw, 70px);
+        line-height: 1.02;
+        margin: 0 0 20px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-copy p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 0 0 28px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .btn {
+        border: 1px solid transparent;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(130deg, var(--accent-1), var(--accent-3));
+        color: #0a1220;
+        box-shadow: 0 10px 24px rgba(111, 208, 255, 0.25);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--stroke);
+        color: var(--ink);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-card {
+        position: relative;
+        padding: 26px;
+        border-radius: 28px;
+        background: var(--glass);
+        border: 1px solid var(--stroke);
+        box-shadow: 0 20px 60px var(--shadow);
+        backdrop-filter: blur(18px);
+        overflow: hidden;
+        min-height: 420px;
+        transform-style: preserve-3d;
+        perspective: 1200px;
+      }
+
+      .radar {
+        position: absolute;
+        inset: 0;
+        opacity: 0.35;
+        background: radial-gradient(circle at 20% 40%, rgba(111, 208, 255, 0.35), transparent 55%),
+          radial-gradient(circle at 80% 60%, rgba(155, 182, 255, 0.35), transparent 60%);
+      }
+
+      .hero-card h3 {
+        font-size: 20px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0 0 18px;
+      }
+
+      .signal-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .signal {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid var(--stroke);
+        background: rgba(7, 12, 20, 0.65);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transform: translateZ(20px);
+      }
+
+      .signal span {
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .signal strong {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .section {
+        padding: 80px clamp(20px, 6vw, 110px);
+        position: relative;
+        z-index: 1;
+      }
+
+      .section h2 {
+        font-family: "Unbounded", sans-serif;
+        font-size: clamp(32px, 4vw, 48px);
+        margin: 0 0 20px;
+      }
+
+      .section p {
+        color: var(--muted);
+        max-width: 640px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+        margin-top: 36px;
+      }
+
+      .panel {
+        padding: 24px;
+        border-radius: 22px;
+        border: 1px solid var(--stroke);
+        background: rgba(11, 16, 26, 0.72);
+        box-shadow: 0 16px 40px rgba(5, 8, 14, 0.5);
+        transition: transform 0.25s ease, border 0.25s ease;
+      }
+
+      .panel:hover {
+        transform: translateY(-6px);
+        border-color: rgba(95, 232, 196, 0.6);
+      }
+
+      .panel h4 {
+        margin: 0 0 14px;
+        font-size: 18px;
+      }
+
+      .panel p {
+        margin: 0;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 30px;
+      }
+
+      .step {
+        border-left: 2px solid var(--accent-1);
+        padding-left: 18px;
+      }
+
+      .step h5 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--accent-1);
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .cta {
+        margin-top: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 28px;
+        border-radius: 26px;
+        border: 1px solid var(--stroke);
+        background: linear-gradient(120deg, rgba(111, 208, 255, 0.18), rgba(139, 210, 178, 0.15));
+      }
+
+      .cta h3 {
+        margin: 0 0 6px;
+        font-size: 24px;
+      }
+
+      footer {
+        padding: 30px clamp(20px, 6vw, 110px) 50px;
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .float-stack {
+        position: relative;
+        height: 440px;
+        transform-style: preserve-3d;
+        perspective: 1400px;
+      }
+
+      .stack-card {
+        position: absolute;
+        inset: 0;
+        border-radius: 28px;
+        border: 1px solid var(--stroke);
+        background: linear-gradient(140deg, rgba(111, 208, 255, 0.16), rgba(155, 182, 255, 0.12));
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+        transform-style: preserve-3d;
+      }
+
+      .stack-card:nth-child(1) {
+        transform: translateZ(-40px) rotateX(8deg) rotateY(-10deg);
+        opacity: 0.5;
+      }
+
+      .stack-card:nth-child(2) {
+        transform: translateZ(-10px) rotateX(4deg) rotateY(6deg);
+        opacity: 0.7;
+      }
+
+      .stack-card:nth-child(3) {
+        transform: translateZ(20px);
+        opacity: 0.95;
+      }
+
+      .stack-metrics {
+        position: absolute;
+        inset: 26px;
+        display: grid;
+        gap: 16px;
+        transform: translateZ(30px);
+      }
+
+      .metric {
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 1px solid var(--stroke);
+        background: rgba(6, 10, 18, 0.7);
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        font-size: 16px;
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-3,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          display: none;
+        }
+
+        .cta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-right" aria-hidden="true"></div>
+    <div class="orb orb-left" aria-hidden="true"></div>
+    <div class="grid-floor" aria-hidden="true"></div>
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="kq-gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5fe8c4" />
+              <stop offset="100%" stop-color="#4f7bff" />
+            </linearGradient>
+          </defs>
+          <circle class="logo-mark" cx="32" cy="32" r="26" />
+          <path class="logo-mark" d="M22 40V22h14l-8 9 10 9h-4l-8-7v7H22z" />
+          <path class="logo-mark" d="M42 22v20a8 8 0 1 0 0-16" />
+        </svg>
+        <span>KAVACHQ</span>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#domains">Domains</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy reveal">
+          <h1>Quantum technologies, AI solutions, and next-generation security.</h1>
+          <p>
+            KavachQ Technologies Private Limited is a specialized consultancy helping enterprises
+            future-proof operations with quantum computing, artificial intelligence, and post-quantum
+            security. We translate complex research into production-grade systems that are resilient,
+            scalable, and measurable.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary">Explore Capabilities</button>
+            <button class="btn btn-secondary">Schedule a Consult</button>
+          </div>
+        </div>
+        <div class="hero-card reveal">
+          <div class="radar" aria-hidden="true"></div>
+          <h3>Capability Snapshot</h3>
+          <div class="signal-grid">
+            <div class="signal">
+              <span>Quantum Platforms</span>
+              <strong>Qiskit / Cirq</strong>
+            </div>
+            <div class="signal">
+              <span>ML Stack</span>
+              <strong>PyTorch + TF</strong>
+            </div>
+            <div class="signal">
+              <span>PQC Standards</span>
+              <strong>Kyber / Dilithium</strong>
+            </div>
+            <div class="signal">
+              <span>QKD Protocols</span>
+              <strong>BB84 / E91</strong>
+            </div>
+          </div>
+        </div>
+        <div class="float-stack reveal" aria-hidden="true">
+          <div class="stack-card"></div>
+          <div class="stack-card"></div>
+          <div class="stack-card"></div>
+          <div class="stack-metrics">
+            <div class="metric">
+              <span>Model Latency</span>
+              <strong>18 ms</strong>
+            </div>
+            <div class="metric">
+              <span>Quantum Jobs</span>
+              <strong>1.2K</strong>
+            </div>
+            <div class="metric">
+              <span>Risk Reduction</span>
+              <strong>74%</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <h2 class="reveal">About KavachQ</h2>
+        <p class="reveal">
+          We are a specialized technology consultancy delivering cutting-edge solutions in quantum
+          computing, artificial intelligence, and post-quantum security. With deep expertise in
+          emerging technologies, we help enterprises gain competitive advantage through innovative,
+          secure, and intelligent solutions.
+        </p>
+      </section>
+
+      <section class="section" id="expertise">
+        <h2 class="reveal">Technical Expertise</h2>
+        <p class="reveal">
+          Our team develops production-grade applications across quantum platforms, AI/ML systems, and
+          cryptographic security implementations.
+        </p>
+        <div class="grid-3">
+          <div class="panel reveal">
+            <h4>Quantum Artificial Intelligence</h4>
+            <p>
+              Hybrid quantum-classical AI systems for optimization, pattern recognition, and
+              decision-making on IBM Qiskit, Google Cirq, Amazon Braket, and PennyLane.
+            </p>
+          </div>
+          <div class="panel reveal">
+            <h4>Quantum Machine Learning</h4>
+            <p>
+              VQE, QAOA, and quantum neural networks with PennyLane, integrated into PyTorch and
+              TensorFlow pipelines.
+            </p>
+          </div>
+          <div class="panel reveal">
+            <h4>Post-Quantum Cryptography</h4>
+            <p>
+              NIST-standardized algorithms including CRYSTALS-Kyber, CRYSTALS-Dilithium, and SPHINCS+,
+              plus crypto-agility migration strategies.
+            </p>
+          </div>
+          <div class="panel reveal">
+            <h4>Quantum Key Distribution</h4>
+            <p>
+              QKD system design using BB84 and E91 protocols, integrated with enterprise security
+              architectures.
+            </p>
+          </div>
+          <div class="panel reveal">
+            <h4>Agentic AI Systems</h4>
+            <p>
+              Autonomous agents for reasoning, planning, and execution using multi-agent frameworks
+              like LangChain and AutoGen.
+            </p>
+          </div>
+          <div class="panel reveal">
+            <h4>LLM &amp; AI Applications</h4>
+            <p>
+              Custom LLM fine-tuning, RAG pipelines, conversational AI, and knowledge management
+              systems.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="domains">
+        <h2 class="reveal">Domain Expertise</h2>
+        <p class="reveal">We build solutions tailored to high-stakes industries.</p>
+        <div class="grid-3">
+          <div class="panel reveal">
+            <h4>Financial Services &amp; FinTech</h4>
+            <p>Quantum-safe banking, algorithmic trading, and advanced risk modeling.</p>
+          </div>
+          <div class="panel reveal">
+            <h4>Healthcare &amp; Life Sciences</h4>
+            <p>Drug discovery acceleration, genomics workflows, and medical AI diagnostics.</p>
+          </div>
+          <div class="panel reveal">
+            <h4>Cybersecurity &amp; Defense</h4>
+            <p>PQC migration, secure communications, and threat intelligence systems.</p>
+          </div>
+          <div class="panel reveal">
+            <h4>Enterprise &amp; Technology</h4>
+            <p>AI automation, intelligent workflows, and digital transformation programs.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <h2 class="reveal">Services</h2>
+        <p class="reveal">
+          From strategy to production, we deliver end-to-end outcomes in quantum and advanced AI.
+        </p>
+        <div class="timeline">
+          <div class="step reveal">
+            <h5>01 / Technical Consulting</h5>
+            <p>Architecture design, technology assessment, and strategic roadmaps.</p>
+          </div>
+          <div class="step reveal">
+            <h5>02 / Product Development</h5>
+            <p>Quantum-enhanced apps, AI/ML systems, and secure deployments.</p>
+          </div>
+          <div class="step reveal">
+            <h5>03 / Security Solutions</h5>
+            <p>PQC implementation, QKD integration, and crypto-agility assessments.</p>
+          </div>
+          <div class="step reveal">
+            <h5>04 / Training &amp; Enablement</h5>
+            <p>Workshops, knowledge transfer, and capability building for teams.</p>
+          </div>
+        </div>
+        <div class="cta reveal">
+          <div>
+            <h3>Let's build the future together.</h3>
+            <p>Talk to us about your quantum and AI roadmap.</p>
+          </div>
+          <button class="btn btn-primary">hello@kavachq.com</button>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <h2 class="reveal">Contact</h2>
+        <p class="reveal">
+          KavachQ Technologies Private Limited · hello@kavachq.com · kavachq.ai
+        </p>
+      </section>
+    </main>
+
+    <footer>KavachQ Technologies Private Limited • Quantum Technologies | AI Solutions | Next-Generation Security</footer>
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+      const hero = document.querySelector(".hero");
+      const stack = document.querySelector(".float-stack");
+
+      if (hero && stack) {
+        hero.addEventListener("mousemove", (event) => {
+          const rect = hero.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          const rotateX = (y * -10).toFixed(2);
+          const rotateY = (x * 12).toFixed(2);
+          stack.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        hero.addEventListener("mouseleave", () => {
+          stack.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+      }
+    </script>
+  </body>
+</html>
